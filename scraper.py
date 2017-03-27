@@ -18,26 +18,39 @@ def get_countries_from_json():
         data = json.load(countries_file)
         return data['Countries']
 
-DRIVER.get(INITIAL_URL)
-assert "International" in DRIVER.title
-inputElement = DRIVER.find_element_by_id("countryName")
+
+def find_country_input():
+    DRIVER.get(INITIAL_URL)
+    assert "International" in DRIVER.title
+    return DRIVER.find_element_by_id("countryName")
 
 
 def get_calling_landlines(content):
     soup = BeautifulSoup(content, "html.parser")
-    land_line = soup.find("td", {"id": "landLine"})
-    if land_line:
-        return land_line.strong.text
+    rates_table = soup.find("table", {"id": "standardRatesTable"})
+    if rates_table:
+        grey_box = rates_table.find("tr", "greyBox")
+        return grey_box.find_all("td")[1].text
 
 
-for country in get_countries_from_json():
-    inputElement.clear()
-    inputElement.send_keys(country)
-    inputElement.send_keys(Keys.ENTER)
-    wait()
-    DRIVER.find_element_by_id("paymonthly").click()
-    print get_calling_landlines(DRIVER.page_source)
-    wait()
+def insert_term_input(term, input_text):
+    input_text.clear()
+    input_text.send_keys(term)
+    input_text.send_keys(Keys.ENTER)
+
+
+def main():
+    country_input = find_country_input()
+    for country in get_countries_from_json():
+        insert_term_input(country, country_input)
+        wait()
+        DRIVER.find_element_by_id("paymonthly").click()
+        print get_calling_landlines(DRIVER.page_source)
+        wait()
+    DRIVER.quit()
+
+if __name__ == "__main__":
+    main()
 
 
 
