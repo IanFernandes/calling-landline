@@ -22,14 +22,14 @@ def get_countries_from_json():
 
 
 def find_country_input():
-    """Returns the input text where country will located"""
+    """Returns the input text element where country will be located"""
     DRIVER.get(INITIAL_URL)
     assert "International" in DRIVER.title
     return DRIVER.find_element_by_id("countryName")
 
 
 def get_calling_landlines(content):
-    """Converts the content passed as argument in BeautifulSoup object and extracts landine prizing"""
+    """Converts the content passed as argument in BeautifulSoup object and extracts landine price"""
     soup = BeautifulSoup(content, "html.parser")
     rates_table = soup.find("table", {"id": "standardRatesTable"})
     if rates_table:
@@ -38,7 +38,7 @@ def get_calling_landlines(content):
 
 
 def insert_term_input(term, input_text):
-    """Insets the term on input_text both defined as argument"""
+    """Inserts the term on input_text both defined as argument"""
     input_text.clear()
     input_text.send_keys(term)
     input_text.send_keys(Keys.ENTER)
