@@ -9,31 +9,36 @@ from selenium.webdriver.common.keys import Keys
 
 
 def wait():
+    """Sleeps the script, for the time defined at random"""
     random_number = randint(2, 5)
     time.sleep(random_number)
 
 
 def get_countries_from_json():
+    """Returns the countries listed in countries.json file"""
     with open('countries.json') as countries_file:
         data = json.load(countries_file)
         return data['Countries']
 
 
 def find_country_input():
+    """Returns the input text where country will located"""
     DRIVER.get(INITIAL_URL)
     assert "International" in DRIVER.title
     return DRIVER.find_element_by_id("countryName")
 
 
 def get_calling_landlines(content):
+    """Converts the content passed as argument in BeautifulSoup object and extracts landine prizing"""
     soup = BeautifulSoup(content, "html.parser")
     rates_table = soup.find("table", {"id": "standardRatesTable"})
     if rates_table:
-        grey_box = rates_table.find("tr", "greyBox")
-        return grey_box.find_all("td")[1].text
+        landine_tag = rates_table.find("tr", "greyBox")
+        return landine_tag.find_all("td")[1].text
 
 
 def insert_term_input(term, input_text):
+    """Insets the term on input_text both defined as argument"""
     input_text.clear()
     input_text.send_keys(term)
     input_text.send_keys(Keys.ENTER)
